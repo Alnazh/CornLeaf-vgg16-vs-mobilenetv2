@@ -45,7 +45,7 @@ def plot_confusion_matrix(model_name, val_ds, class_names):
         y_true.extend(np.argmax(labels.numpy(), axis=1))
         y_pred.extend(np.argmax(preds, axis=1))
 
-    cm = confusion_matrix(y_true, y_pred)
+    cm = confusion_matrix(y_true, y_pred, labels=range(len(class_names)))
 
     fig, ax = plt.subplots(figsize=(6, 5))
     im = ax.imshow(cm, cmap="Blues")
@@ -68,7 +68,7 @@ def plot_confusion_matrix(model_name, val_ds, class_names):
     print(f"Confusion matrix {model_name} tersimpan di {MODELS_DIR}/{model_name}_confusion_matrix.png")
 
     print(f"\nClassification Report - {model_name.upper()}")
-    print(classification_report(y_true, y_pred, target_names=class_names))
+    print(classification_report(y_true, y_pred, labels=range(len(class_names)), target_names=class_names, zero_division=0))
 
 
 def main():
