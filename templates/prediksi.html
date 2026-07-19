@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Prediksi{% endblock %}
+{% block content %}
+
+<div class="page-container">
+
+  <div class="page-heading">
+    <p class="eyebrow">Ruang Uji Model</p>
+    <h1>Uji Gambar Daun Jagung</h1>
+    <p>Unggah satu gambar daun jagung, CornLeaf akan menjalankan klasifikasi dengan VGG16 dan MobileNetV2 secara bersamaan.</p>
+  </div>
+
+  {% include "partials/prediksi_upload.html" %}
+
+</div>
+
+{% endblock %}
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/prediksi.js') }}"></script>
+{% endblock %}

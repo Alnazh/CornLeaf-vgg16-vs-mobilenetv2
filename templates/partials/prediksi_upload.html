@@ -1,0 +1,46 @@
+<div class="predict-layout">
+  <div class="card upload-card">
+    <p class="card-label">Unggah Gambar Daun Jagung</p>
+    <p class="upload-subtext">Format yang didukung: JPG, JPEG, PNG (maksimal 5 MB)</p>
+
+    <div class="dropzone" id="dropzone">
+      <img id="preview" class="preview-image" alt="Pratinjau gambar" hidden>
+      <div id="dropzone-empty" class="dropzone-empty">
+        <span class="dz-icon">&#128228;</span>
+        <p>Klik atau seret gambar ke sini</p>
+        <p>Pastikan gejala pada daun terlihat jelas dan pencahayaan cukup</p>
+        <label for="file-input" class="upload-button">Pilih Gambar</label>
+      </div>
+      <input type="file" id="file-input" accept="image/*" hidden>
+    </div>
+
+    <button id="predict-button" class="predict-button" disabled>
+      <span class="btn-icon">&#128269;</span>Klasifikasikan Daun
+    </button>
+    <p id="status-text" class="status-text"></p>
+  </div>
+
+  <aside class="card info-card">
+    <p class="upload-extra-label">Tips agar Hasil Lebih Akurat</p>
+    <ul class="tip-list">
+      <li>Ambil foto close-up agar tekstur dan bercak pada daun terlihat jelas.</li>
+      <li>Gunakan pencahayaan alami yang cukup dan hindari bayangan menutupi bagian bergejala.</li>
+      <li>Fokuskan satu foto pada satu helai daun agar model tidak terganggu latar belakang.</li>
+    </ul>
+    <p class="upload-extra-label">Kelas yang Dapat Dikenali</p>
+    <div class="class-chip-list">
+      <span class="class-chip" data-disease="Blight">Blight (Hawar Daun)</span>
+      <span class="class-chip" data-disease="Common_Rust">Common Rust (Karat Daun)</span>
+      <span class="class-chip" data-disease="Gray_Leaf_Spot">Gray Leaf Spot (Bercak Daun Abu-abu)</span>
+      <span class="class-chip" data-disease="Healthy">Healthy (Sehat)</span>
+    </div>
+    <p class="info-footnote">Lihat performa model secara lengkap di halaman <a href="{{ url_for('evaluasi') }}">Evaluasi Model</a>.</p>
+  </aside>
+</div>
+
+<div id="loading-overlay" class="loading-overlay" hidden>
+  <div class="loading-modal">
+    <span class="spinner spinner-lg"></span>
+    <p>Menganalisis gambar, mohon tunggu...</p>
+  </div>
+</div>

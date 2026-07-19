@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+{% block title %}Evaluasi{% endblock %}
+{% block content %}
+
+<div class="page-container">
+
+  <div class="page-heading">
+    <p class="eyebrow">Laporan Kinerja Model</p>
+    <h1>Evaluasi dan Perbandingan Model</h1>
+    <p>Kurva training, confusion matrix, dan perbandingan metrik antara VGG16 dan MobileNetV2 pada data validasi.</p>
+  </div>
+
+  <section class="section-block">
+    <div class="stat-grid">
+      <div class="stat-card tone-blue">
+        <div class="stat-value tone-blue">{{ vgg16_metrics.accuracy_pct if vgg16_metrics else "-" }}</div>
+        <div class="stat-label">Akurasi VGG16</div>
+      </div>
+      <div class="stat-card tone-purple">
+        <div class="stat-value tone-purple">{{ mobilenetv2_metrics.accuracy_pct if mobilenetv2_metrics else "-" }}</div>
+        <div class="stat-label">Akurasi MobileNetV2</div>
+      </div>
+      <div class="stat-card tone-gold">
+        <div class="stat-value tone-gold">{{ vgg16_report.macro_avg.f1_score if vgg16_report else "-" }}</div>
+        <div class="stat-label">Macro F1 VGG16</div>
+      </div>
+      <div class="stat-card tone-teal">
+        <div class="stat-value tone-teal">{{ mobilenetv2_report.macro_avg.f1_score if mobilenetv2_report else "-" }}</div>
+        <div class="stat-label">Macro F1 MobileNetV2</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <p class="card-label">Kurva Training</p>
+    {% if not history_available %}
+    <div class="empty-state">Belum ada data kurva training. Jalankan <code>python evaluate.py</code> terlebih dahulu.</div>
+    {% else %}
+    <div class="two-col">
+      <div class="chart-box">
+        <h3>Akurasi Validasi per Epoch</h3>
+        <canvas id="chart-accuracy"></canvas>
+        {% if accuracy_caption %}
+        <p class="chart-caption">{{ accuracy_caption }}</p>
+        {% endif %}
+      </div>
+      <div class="chart-box">
+        <h3>Loss Validasi per Epoch</h3>
+        <canvas id="chart-loss"></canvas>
+        {% if loss_caption %}
+        <p class="chart-caption">{{ loss_caption }}</p>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="section-block">
+    <p class="card-label">Perbandingan Metrik</p>
+    {% if not comparison_available %}
+    <div class="empty-state">Belum ada data classification report. Jalankan <code>python evaluate.py</code> terlebih dahulu.</div>
+    {% else %}
+    <div class="chart-box">
+      <h3>Akurasi, Precision, Recall, F1-Score (Macro Average)</h3>
+      <canvas id="chart-comparison"></canvas>
+      {% if comparison_caption %}
+      <p class="chart-caption">{{ comparison_caption }}</p>
+      {% endif %}
+    </div>
+    {% endif %}
+  </section>
+
+  <section class="section-block">
+    <p class="card-label">Confusion Matrix</p>
+    <div class="two-col">
+      <div class="chart-box">
+        <h3>VGG16</h3>
+        {% if vgg16_confusion_exists %}
+        <img class="confusion-image" src="{{ url_for('outputs_file', filename='vgg16_confusion_matrix.png') }}" alt="Confusion matrix VGG16">
+        {% if vgg16_confusion_caption %}
+        <p class="chart-caption">{{ vgg16_confusion_caption }}</p>
+        {% endif %}
+        {% else %}
+        <div class="empty-state">Belum tersedia. Jalankan <code>python evaluate.py</code>.</div>
+        {% endif %}
+      </div>
+      <div class="chart-box">
+        <h3>MobileNetV2</h3>
+        {% if mobilenetv2_confusion_exists %}
+        <img class="confusion-image" src="{{ url_for('outputs_file', filename='mobilenetv2_confusion_matrix.png') }}" alt="Confusion matrix MobileNetV2">
+        {% if mobilenetv2_confusion_caption %}
+        <p class="chart-caption">{{ mobilenetv2_confusion_caption }}</p>
+        {% endif %}
+        {% else %}
+        <div class="empty-state">Belum tersedia. Jalankan <code>python evaluate.py</code>.</div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block">
+    <p class="card-label">Classification Report per Kelas</p>
+    <div class="two-col">
+      <div class="chart-box">
+        <h3>VGG16</h3>
+        {% if vgg16_report %}
+        <table class="data-table">
+          <thead><tr><th>Kelas</th><th>Precision</th><th>Recall</th><th>F1-Score</th></tr></thead>
+          <tbody>
+            {% for row in vgg16_report.rows %}
+            <tr><td>{{ row.label }}</td><td>{{ row.precision }}</td><td>{{ row.recall }}</td><td>{{ row.f1_score }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% if vgg16_report_caption %}
+        <p class="chart-caption">{{ vgg16_report_caption }}</p>
+        {% endif %}
+        {% else %}
+        <div class="empty-state">Belum tersedia.</div>
+        {% endif %}
+      </div>
+      <div class="chart-box">
+        <h3>MobileNetV2</h3>
+        {% if mobilenetv2_report %}
+        <table class="data-table">
+          <thead><tr><th>Kelas</th><th>Precision</th><th>Recall</th><th>F1-Score</th></tr></thead>
+          <tbody>
+            {% for row in mobilenetv2_report.rows %}
+            <tr><td>{{ row.label }}</td><td>{{ row.precision }}</td><td>{{ row.recall }}</td><td>{{ row.f1_score }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% if mobilenetv2_report_caption %}
+        <p class="chart-caption">{{ mobilenetv2_report_caption }}</p>
+        {% endif %}
+        {% else %}
+        <div class="empty-state">Belum tersedia.</div>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <section class="section-block card">
+    <p class="card-label">Perbandingan Arsitektur</p>
+    <table class="data-table">
+      <thead><tr><th>Aspek</th><th>VGG16</th><th>MobileNetV2</th></tr></thead>
+      <tbody>
+        <tr><td>Jumlah Parameter (feature extractor)</td><td>sekitar 14,7 juta</td><td>sekitar 2,4 juta</td></tr>
+        <tr><td>Karakteristik</td><td>Dalam, akurasi cenderung tinggi</td><td>Ringan, efisien untuk perangkat terbatas</td></tr>
+        <tr><td>Cocok untuk</td><td>Server dengan sumber daya besar</td><td>Perangkat mobile atau edge device</td></tr>
+      </tbody>
+    </table>
+    {% if architecture_caption %}
+    <p class="chart-caption">{{ architecture_caption }}</p>
+    {% endif %}
+  </section>
+
+</div>
+
+{% endblock %}
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="{{ url_for('static', filename='js/evaluasi.js') }}"></script>
+{% endblock %}
