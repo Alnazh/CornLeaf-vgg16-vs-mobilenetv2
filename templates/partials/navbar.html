@@ -1,0 +1,11 @@
+<nav class="navbar">
+  <a href="{{ url_for('index') }}" class="navbar-brand"><img src="{{ url_for('static', filename='img/favicon.svg') }}" alt="Logo CornLeaf" class="navbar-logo"><span class="navbar-brand-text">Corn<span>Leaf</span></span></a>
+  <button id="navbar-toggle" class="navbar-toggle" aria-label="Buka menu">&#9776;</button>
+  <ul class="navbar-links" id="navbar-links">
+    <li><a href="{{ url_for('index') }}" class="{{ 'active' if active_page == 'beranda' else '' }}">Beranda</a></li>
+    <li><a href="{{ url_for('prediksi') }}" class="{{ 'active' if active_page == 'prediksi' else '' }}">Prediksi</a></li>
+    <li><a href="{{ url_for('evaluasi') }}" class="{{ 'active' if active_page == 'evaluasi' else '' }}">Evaluasi</a></li>
+    <li><a href="{{ url_for('dataset_page') }}" class="{{ 'active' if active_page == 'dataset' else '' }}">Dataset</a></li>
+    <li><a href="{{ url_for('tentang') }}" class="{{ 'active' if active_page == 'tentang' else '' }}">Tentang</a></li>
+  </ul>
+</nav>
