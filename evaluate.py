@@ -8,6 +8,7 @@ from sklearn.metrics import confusion_matrix, classification_report
 from data_loader import get_datasets
 
 MODEL_NAMES = ["vgg16", "mobilenetv2"]
+MODEL_TITLES = {"vgg16": "VGG16", "mobilenetv2": "MobileNetV2"}
 MODELS_DIR = "models"
 OUTPUTS_DIR = "outputs"
 
@@ -24,13 +25,13 @@ def plot_and_export_curves(model_name):
     fig, axes = plt.subplots(1, 2, figsize=(12, 4))
     axes[0].plot(history["epoch"], history["accuracy"], label="Train Accuracy")
     axes[0].plot(history["epoch"], history["val_accuracy"], label="Val Accuracy")
-    axes[0].set_title(f"{model_name.upper()} - Akurasi")
+    axes[0].set_title(f"{MODEL_TITLES[model_name]} - Akurasi")
     axes[0].set_xlabel("Epoch")
     axes[0].legend()
 
     axes[1].plot(history["epoch"], history["loss"], label="Train Loss")
     axes[1].plot(history["epoch"], history["val_loss"], label="Val Loss")
-    axes[1].set_title(f"{model_name.upper()} - Loss")
+    axes[1].set_title(f"{MODEL_TITLES[model_name]} - Loss")
     axes[1].set_xlabel("Epoch")
     axes[1].legend()
 
@@ -101,11 +102,13 @@ def plot_confusion_matrix_png(cm, class_names, model_name):
     ax.set_yticklabels(class_names)
     ax.set_xlabel("Prediksi")
     ax.set_ylabel("Label Asli")
-    ax.set_title(f"Confusion Matrix - {model_name.upper()}")
+    ax.set_title(f"Confusion Matrix - {MODEL_TITLES[model_name]}")
 
+    threshold = cm.max() / 2
     for i in range(len(class_names)):
         for j in range(len(class_names)):
-            ax.text(j, i, cm[i, j], ha="center", va="center", color="black")
+            text_color = "white" if cm[i, j] > threshold else "black"
+            ax.text(j, i, cm[i, j], ha="center", va="center", color=text_color)
 
     plt.colorbar(im)
     plt.tight_layout()
