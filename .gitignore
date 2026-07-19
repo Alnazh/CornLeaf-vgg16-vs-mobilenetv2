@@ -2,9 +2,13 @@
 dataset/*
 !dataset/.gitkeep
 
-# Hasil training
-outputs/*
-!outputs/.gitkeep
+# Model besar diabaikan, history CSV dan hasil evaluasi tetap ikut ter-commit
+models/*.keras
+!models/.gitkeep
+
+# Upload sementara dari web app
+uploads/*
+!uploads/.gitkeep
 
 # Python
 __pycache__/
@@ -17,3 +21,4 @@ env/
 # OS
 .DS_Store
 Thumbs.db
+"venv/" 

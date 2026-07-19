@@ -1,59 +1,80 @@
-# Analisis Perbandingan Kinerja Arsitektur VGG16 dan MobileNetV2 untuk Klasifikasi Penyakit Daun Tanaman
+# Analisis Perbandingan Kinerja Arsitektur VGG16 dan MobileNetV2 untuk Klasifikasi Penyakit Daun Jagung
 
 ## Deskripsi Proyek
 
-Proyek ini merupakan capstone project mata kuliah Kecerdasan Buatan dengan fokus studi Computer Vision. Penelitian ini membandingkan performa dua arsitektur Convolutional Neural Network, yaitu VGG16 dan MobileNetV2, dalam tugas klasifikasi penyakit pada daun tanaman.
+Proyek ini merupakan capstone project mata kuliah Kecerdasan Buatan dengan fokus studi Computer Vision. Penelitian ini membandingkan performa dua arsitektur Convolutional Neural Network, yaitu VGG16 dan MobileNetV2, dalam tugas klasifikasi penyakit pada daun tanaman jagung.
 
-Kedua arsitektur dipilih karena mewakili dua pendekatan desain yang berbeda. VGG16 dikenal sebagai arsitektur yang dalam dengan jumlah parameter besar sehingga cenderung menghasilkan akurasi tinggi namun berat secara komputasi. MobileNetV2 dirancang dengan pendekatan depthwise separable convolution sehingga lebih ringan dan efisien, cocok untuk perangkat dengan sumber daya terbatas seperti smartphone. Perbandingan ini relevan untuk kasus nyata deteksi penyakit tanaman di lapangan, di mana aplikasi biasanya dijalankan pada perangkat mobile milik petani, bukan pada server dengan kapasitas komputasi besar.
+VGG16 dikenal sebagai arsitektur yang dalam dengan jumlah parameter besar sehingga cenderung menghasilkan akurasi tinggi namun berat secara komputasi. MobileNetV2 dirancang dengan pendekatan depthwise separable convolution sehingga lebih ringan dan efisien, cocok untuk perangkat dengan sumber daya terbatas seperti smartphone petani.
+
+Selain kode training dan evaluasi, proyek ini juga dilengkapi aplikasi web berbasis Flask untuk mendemonstrasikan hasil kedua model secara langsung.
 
 ## Rumusan Masalah
 
-1. Bagaimana perbandingan akurasi klasifikasi penyakit daun tanaman antara arsitektur VGG16 dan MobileNetV2?
-2. Bagaimana perbandingan efisiensi komputasi (waktu training dan waktu inferensi) antara kedua arsitektur tersebut?
+1. Bagaimana perbandingan akurasi klasifikasi penyakit daun jagung antara arsitektur VGG16 dan MobileNetV2?
+2. Bagaimana perbandingan efisiensi komputasi antara kedua arsitektur tersebut?
 3. Arsitektur mana yang lebih sesuai untuk implementasi pada perangkat dengan sumber daya terbatas?
 
 ## Dataset
 
-Dataset yang digunakan adalah New Plant Diseases Dataset (Augmented), yang merupakan versi augmentasi dari PlantVillage Dataset.
+Corn or Maize Leaf Disease Dataset, sumber: https://www.kaggle.com/datasets/smaranjitghose/corn-or-maize-leaf-disease-dataset
 
-Sumber: https://www.kaggle.com/datasets/vipoooool/new-plant-diseases-dataset
-
-Dataset ini terdiri dari 38 kelas yang mencakup berbagai spesies tanaman dalam kondisi sehat maupun terserang penyakit, dan sudah terbagi ke dalam folder `train` dan `valid`.
-
-Catatan: setelah diekstrak, struktur folder dataset ini biasanya ter-nested dua kali. Sesuaikan path pada `src/data_loader.py` dengan lokasi hasil ekstraksi di komputer kamu.
+Terdiri dari 4 kelas (Blight, Common Rust, Gray Leaf Spot, Healthy) dengan total 4.188 gambar. Letakkan folder kelas langsung di dalam `dataset/`.
 
 ## Struktur Repository
 
 ```
 .
-├── data/                   # dataset (tidak diunggah ke GitHub, lihat .gitignore)
-├── notebooks/              # notebook eksplorasi data dan evaluasi
-├── src/
-│   ├── data_loader.py      # pemuatan dataset ke format tf.data
-│   ├── train_vgg16.py      # training model VGG16
-│   └── train_mobilenetv2.py # training model MobileNetV2
-├── requirements.txt        # daftar dependensi
+├── app.py                      # backend Flask, aplikasi web
+├── data_loader.py              # pemuatan dataset ke format tf.data
+├── train_vgg16.py              # training model VGG16
+├── train_mobilenetv2.py        # training model MobileNetV2
+├── evaluate.py                 # generate kurva, confusion matrix, dan JSON evaluasi
+├── templates/                  # halaman HTML aplikasi web
+│   ├── base.html
+│   ├── partials/
+│   ├── index.html
+│   ├── prediksi.html
+│   ├── evaluasi.html
+│   ├── dataset.html
+│   └── tentang.html
+├── static/
+│   ├── css/style.css
+│   └── js/
+├── dataset/                     # dataset (diabaikan git, lihat .gitignore)
+├── models/                      # model .keras dan history training
+├── outputs/                     # kurva, confusion matrix, dan JSON hasil evaluasi
+├── requirements.txt
 └── README.md
 ```
 
 ## Cara Menjalankan
 
-1. Clone repository ini
-2. Buat environment baru dan install dependensi:
+1. Install dependensi:
    ```
    pip install -r requirements.txt
    ```
-3. Unduh dataset dari tautan Kaggle di atas, letakkan di folder `data/`
-4. Jalankan notebook di folder `notebooks/` secara berurutan
+2. Unduh dataset dari tautan Kaggle, letakkan di `dataset/`
+3. Training kedua model:
+   ```
+   python train_vgg16.py
+   python train_mobilenetv2.py
+   ```
+4. Generate evaluasi (kurva, confusion matrix, JSON):
+   ```
+   python evaluate.py
+   ```
+5. Jalankan aplikasi web:
+   ```
+   python app.py
+   ```
+   Buka `http://127.0.0.1:5000`
 
 ## Metrik Evaluasi
 
-Akurasi, precision, recall, F1-score, serta perbandingan waktu training dan inferensi antar kedua model.
-
-## Status
-
-Progress proyek dicatat melalui commit history repository ini.
+Akurasi, precision, recall, dan F1-score per kelas, ditampilkan dalam bentuk confusion matrix dan classification report pada halaman Evaluasi di aplikasi web.
 
 ## Referensi
 
-Daftar referensi lengkap akan dicantumkan pada laporan ilmiah dan diperbarui secara berkala di sini.
+1. Corn or Maize Leaf Disease Dataset, Kaggle, smaranjitghose, dikurasi dari PlantVillage dan PlantDoc.
+2. Simonyan, K. and Zisserman, A., Very Deep Convolutional Networks for Large-Scale Image Recognition (VGG16), 2014.
+3. Sandler, M., Howard, A., Zhu, M., Zhmoginov, A., and Chen, L., MobileNetV2, Inverted Residuals and Linear Bottlenecks, 2018.
