@@ -97,9 +97,9 @@ Hasil evaluasi pada data validasi (bukan data simulasi):
 
 Kedua model menggunakan pendekatan *transfer learning* (bobot awal dari ImageNet):
 
-- **VGG16** — arsitektur CNN dalam (16 layer berbobot) dengan jumlah parameter besar, dikenal
+- **VGG16** - arsitektur CNN dalam (16 layer berbobot) dengan jumlah parameter besar, dikenal
   akurat namun berat secara komputasi.
-- **MobileNetV2** — arsitektur ringan berbasis *inverted residuals* dan *depthwise separable
+- **MobileNetV2** - arsitektur ringan berbasis *inverted residuals* dan *depthwise separable
   convolution*, dirancang efisien untuk perangkat dengan sumber daya terbatas.
 
 **Spesifikasi input/output:**
@@ -192,19 +192,19 @@ README.md
 
 Proyek ini mencerminkan alur kerja *machine learning* lengkap, dari persiapan data hingga evaluasi:
 
-1. **Persiapan data** — unduh dataset dari Kaggle:
+1. **Persiapan data** - unduh dataset dari Kaggle:
    [Corn or Maize Leaf Disease Dataset](https://www.kaggle.com/datasets/smaranjitghose/corn-or-maize-leaf-disease-dataset),
    lalu letakkan folder kelas langsung di dalam `dataset/`. Pemuatan dan pembagian data (80% train /
    20% validasi) ditangani otomatis oleh `data_loader.py`.
 
-2. **Training** — latih kedua arsitektur secara terpisah:
+2. **Training** - latih kedua arsitektur secara terpisah:
    ```bash
    python train_vgg16.py
    python train_mobilenetv2.py
    ```
    Model tersimpan otomatis di `models/`.
 
-3. **Evaluasi** — hasilkan kurva akurasi/loss, confusion matrix, dan classification report untuk
+3. **Evaluasi** - hasilkan kurva akurasi/loss, confusion matrix, dan classification report untuk
    kedua model sekaligus:
    ```bash
    python evaluate.py
